@@ -1,22 +1,17 @@
 package fr.lavapower.heartbrowser;
 
+import fr.lavapower.heartbrowser.widgets.Grid;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class HeartBrowser extends Application
 {
-    private static Stage stage;
-
     @Override
-    public void start(Stage stage) throws Exception
+    public void start(Stage stage)
     {
-        HeartBrowser.stage = stage;
-
-        Parent parent = FXMLLoader.load(getClass().getResource("browser.fxml"));
-        Scene scene = new Scene(parent);
+        Grid grid = new Grid();
+        Scene scene = new Scene(grid, 780, 640);
 
         stage.setMaximized(true);
         stage.setTitle("HeartBrowser");
