@@ -1,28 +1,24 @@
-package fr.lavapower.heartbrowser.widgets;
+package fr.lavapower.heartbrowser.widgets.tabs;
 
 import javafx.concurrent.Worker;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import javafx.scene.shape.Circle;
 import javafx.scene.web.WebView;
 
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URLEncoder;
-import java.util.Arrays;
 
-public class Tab extends GridPane
+public class TabBrowser extends GridPane
 {
     public final WebView view;
-    public final TabButton tabButton;
+    public final TabBrowserButton tabBrowserButton;
 
-    public Tab(TabButton button, String url) {
+    public TabBrowser(TabBrowserButton button, String url) {
         super();
-        tabButton = button;
+        tabBrowserButton = button;
         view = new WebView();
         setUp(url);
         add(view, 0, 0);
@@ -34,9 +30,9 @@ public class Tab extends GridPane
         view.getEngine().setUserAgent("HeartBrowser 1.0 - AppleWebKil/555.99 JavaFX 8.0");
         view.getEngine().getLoadWorker().stateProperty().addListener(((observable, oldValue, newValue) -> {
             if(newValue == Worker.State.SUCCEEDED)
-                tabButton.setTooltip(new Tooltip(view.getEngine().getTitle()));
+                tabBrowserButton.setTooltip(new Tooltip(view.getEngine().getTitle()));
             else
-                tabButton.setTooltip(new Tooltip(getWorkerStateString(newValue)));
+                tabBrowserButton.setTooltip(new Tooltip(getWorkerStateString(newValue)));
         }));
 
         try {
@@ -50,7 +46,7 @@ public class Tab extends GridPane
             ImageView imageView = new ImageView(new Image(faviconUrl, true));
             imageView.setScaleX(1.6);
             imageView.setScaleY(1.6);
-            tabButton.setGraphic(imageView);
+            tabBrowserButton.setGraphic(imageView);
         }
         catch(UnsupportedEncodingException e)
         {

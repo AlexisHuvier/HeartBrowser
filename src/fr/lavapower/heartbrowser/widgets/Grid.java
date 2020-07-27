@@ -1,5 +1,6 @@
 package fr.lavapower.heartbrowser.widgets;
 
+import fr.lavapower.heartbrowser.widgets.tabs.TabsList;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -18,6 +19,6 @@ public class Grid extends GridPane
         setVgrow(scrollPane, Priority.ALWAYS);
         add(scrollPane, 0, 0);
 
-        tabsList.addTab("http://youtube.fr");
+        tabsList.addTab("https://html5test.com");
     }
 }
