@@ -19,6 +19,6 @@ public class Grid extends GridPane
         setVgrow(scrollPane, Priority.ALWAYS);
         add(scrollPane, 0, 0);
 
-        tabsList.addTab("https://html5test.com");
+        tabsList.addTab("https://www.infowebmaster.fr/outils/mon-user-agent.php#:~:text=Le%20user%20agent%20est%20un,est%20utilisé%20par%20un%20internaute.");
     }
 }
