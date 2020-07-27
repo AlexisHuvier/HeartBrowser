@@ -1,6 +1,6 @@
 package fr.lavapower.heartbrowser.widgets.tabs;
 
-import javafx.scene.shape.Circle;
+import javafx.scene.input.MouseButton;
 
 public class TabBrowserButton extends TabButton
 {
@@ -15,5 +15,10 @@ public class TabBrowserButton extends TabButton
     @Override
     public void setUp() {
         setOnAction(event -> tabsList.selectTab(tabBrowser));
+        setOnMouseClicked(event -> {
+            if(event.getClickCount() == 2 && event.getButton() == MouseButton.SECONDARY) {
+                tabsList.deleteTab(tabBrowser);
+            }
+        });
     }
 }
