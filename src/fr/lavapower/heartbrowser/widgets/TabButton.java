@@ -17,14 +17,7 @@ public class TabButton extends Button
         setMaxSize(40, 40);
     }
 
-    public void setUp(Grid grid, TabsList tabsList) {
-        setOnAction(event -> {
-            if(tabsList.currentTab != null)
-                grid.getChildren().remove(tabsList.currentTab);
-            grid.add(tab, 2, 0);
-            tabsList.currentTab = tab;
-            Grid.setVgrow(tab, Priority.ALWAYS);
-            Grid.setHgrow(tab, Priority.ALWAYS);
-        });
+    public void setUp() {
+        setOnAction(event -> tabsList.selectTab(tab));
     }
 }

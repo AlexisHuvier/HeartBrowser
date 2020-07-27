@@ -24,6 +24,16 @@ public class TabsList extends VBox
         tabButton.setUp();
         buttons.add(tabButton);
         getChildren().setAll(buttons);
+        selectTab(tabButton.tab);
+    }
+
+    public void selectTab(Tab tab) {
+        if(currentTab != null)
+            grid.getChildren().remove(currentTab);
+        grid.add(tab, 1, 0);
+        currentTab = tab;
+        Grid.setVgrow(tab, Priority.ALWAYS);
+        Grid.setHgrow(tab, Priority.ALWAYS);
     }
 
     public ArrayList<TabButton> getButtons() { return buttons; }
