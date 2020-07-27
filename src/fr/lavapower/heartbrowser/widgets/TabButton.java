@@ -1,17 +1,17 @@
 package fr.lavapower.heartbrowser.widgets;
 
 import javafx.scene.control.Button;
-import javafx.scene.layout.Priority;
 import javafx.scene.shape.Circle;
 
 public class TabButton extends Button
 {
-    private final Tab tab;
+    public final Tab tab;
+    public final TabsList tabsList;
 
-    public TabButton(String url) {
+    public TabButton(TabsList tabsList, String url) {
         super();
-        tab = new Tab(url);
-
+        this.tabsList = tabsList;
+        tab = new Tab(this, url);
         setShape(new Circle(20));
         setMinSize(40, 40);
         setMaxSize(40, 40);

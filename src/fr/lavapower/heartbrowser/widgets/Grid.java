@@ -19,7 +19,6 @@ public class Grid extends GridPane
         add(tabsList, 0, 0);
         add(separator, 1, 0);
 
-        tabsList.addTab(this, "http://google.com");
-        tabsList.addTab(this, "http://herobrine.fr");
+        tabsList.addTab("http://youtube.fr");
     }
 }
