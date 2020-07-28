@@ -7,10 +7,11 @@ import javafx.scene.layout.Priority;
 
 public class Grid extends GridPane
 {
+    public final TabsList tabsList;
     public Grid() {
         super();
 
-        TabsList tabsList = new TabsList(this);
+        tabsList = new TabsList(this);
         ScrollPane scrollPane = new ScrollPane(tabsList);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
