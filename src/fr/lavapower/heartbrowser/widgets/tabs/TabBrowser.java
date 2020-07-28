@@ -1,7 +1,7 @@
 package fr.lavapower.heartbrowser.widgets.tabs;
 
 import fr.lavapower.heartbrowser.utils.HeartUtils;
-import javafx.concurrent.Worker;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -17,6 +17,8 @@ import java.net.URLEncoder;
 public class TabBrowser extends GridPane
 {
     private final TextField urlInput;
+    private final Button backButton;
+    private final Button forwardButton;
     public final WebView view;
     public final TabBrowserButton tabBrowserButton;
     private String locationMain = null;
@@ -26,11 +28,18 @@ public class TabBrowser extends GridPane
         tabBrowserButton = button;
         view = new WebView();
         urlInput = new TextField();
+        backButton = new Button("<");
+        forwardButton = new Button(">");
         setUp(url);
-        add(urlInput, 0, 0);
-        add(view, 0, 1);
+
+        add(backButton, 0, 0);
+        add(forwardButton, 1, 0);
+        add(urlInput, 2, 0);
+        add(view, 0, 1, 3, 1);
+
         setVgrow(view, Priority.ALWAYS);
         setHgrow(view, Priority.ALWAYS);
+        setHgrow(urlInput, Priority.ALWAYS);
     }
 
     private void setUp(String url) {
@@ -41,6 +50,9 @@ public class TabBrowser extends GridPane
         }));
 
         view.getEngine().locationProperty().addListener(((observable, oldValue, newValue) -> {
+            if(oldValue != null)
+                backButton.setDisable(false);
+
             if(newValue != null && !newValue.isEmpty()) {
                 urlInput.setText(newValue);
                 try {
@@ -72,27 +84,30 @@ public class TabBrowser extends GridPane
                 view.getEngine().load(HeartUtils.formatUrl(urlInput.getText()));
         });
 
-        view.getEngine().setUserAgent("HeartBrowser 1.0 - AppleWebKil/555.99 JavaFX 8.0");
+        backButton.setOnAction(event -> {
+            if( view.getEngine().getHistory().getCurrentIndex() > 0) {
+                view.getEngine().getHistory().go(-1);
+                forwardButton.setDisable(false);
+            }
 
+            if(view.getEngine().getHistory().getCurrentIndex() == 0)
+                backButton.setDisable(true);
+        });
+
+        forwardButton.setOnAction(event -> {
+            if(view.getEngine().getHistory().getCurrentIndex() < view.getEngine().getHistory().getEntries().size() - 1) {
+                view.getEngine().getHistory().go(1);
+                backButton.setDisable(false);
+            }
+
+            if(view.getEngine().getHistory().getCurrentIndex() == view.getEngine().getHistory().getEntries().size() - 1)
+                forwardButton.setDisable(true);
+        });
+
+        view.getEngine().setUserAgent("HeartBrowser 1.0 - AppleWebKil/555.99 JavaFX 8.0");
         view.getEngine().load(url);
         urlInput.setText(url);
-    }
-
-    private static String getWorkerStateString(Worker.State state ) {
-        switch(state) {
-            case READY:
-                return "Chargement prêt";
-            case FAILED:
-                return "Chargement raté";
-            case RUNNING:
-                return "Chargement en cours";
-            case CANCELLED:
-                return "Chargement annulé";
-            case SCHEDULED:
-                return "Chargement prévu";
-            case SUCCEEDED:
-                return "Chargement réussi";
-        }
-        return "";
+        backButton.setDisable(true);
+        forwardButton.setDisable(true);
     }
 }
