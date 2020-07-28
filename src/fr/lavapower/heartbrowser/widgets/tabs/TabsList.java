@@ -69,4 +69,8 @@ public class TabsList extends VBox
         buttons.remove(tabBrowser.tabBrowserButton);
         setupChildren();
     }
+
+    public int getTabCount() {
+        return buttons.size();
+    }
 }
