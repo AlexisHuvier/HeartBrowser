@@ -99,7 +99,7 @@ public class TabBrowser extends GridPane
         });
 
         view.getEngine().setUserAgent("HeartBrowser 1.0 - AppleWebKil/555.99 JavaFX 8.0");
-        view.getEngine().load(url);
+        view.getEngine().load(HeartUtils.formatUrl(url));
         urlInput.setText(url);
         backButton.setDisable(true);
         forwardButton.setDisable(true);
