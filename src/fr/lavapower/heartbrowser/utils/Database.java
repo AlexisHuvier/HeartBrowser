@@ -33,7 +33,20 @@ public class Database
     }
 
     public void setUp() {
-        //TODO
+        executeWithoutReturn("CREATE TABLE IF NOT EXISTS configuration(id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, logLevel TEXT, home TEXT,"
+                + "version INTEGER);");
+        executeWithoutReturn("CREATE TABLE IF NOT EXISTS history(id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, url TEXT, "
+                + "date DATETIME DEFAULT CURRENT_TIMESTAMP);");
+        executeWithoutReturn("CREATE TABLE IF NOT EXISTS favorites(url TEXT PRIMARY KEY UNIQUE);");
+        try {
+            if(executeWithReturn("SELECT * FROM configuration;").getFetchSize() == 0)
+                executeWithoutReturn("INSERT INTO configuration(logLevel, home, version) VALUES(\"INFO\", \"google.fr\", 1);");
+
+            int version = executeWithReturn("SELECT * FROM configuration;").getInt("version");
+            if(version != 1)
+                HeartBrowser.logger.log(Level.SEVERE, "Unknown Version of BDD ("+version+")");
+        }
+        catch(SQLException e) { HeartBrowser.logger.log(Level.SEVERE, "SQL Error", e); }
     }
 
     public ResultSet executeWithReturn(String query) {
