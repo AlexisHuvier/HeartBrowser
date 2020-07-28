@@ -1,11 +1,10 @@
 package fr.lavapower.heartbrowser.widgets.tabs;
 
+import fr.lavapower.heartbrowser.HeartBrowser;
 import fr.lavapower.heartbrowser.widgets.Grid;
+import fr.lavapower.heartbrowser.windows.QuestionYesCancel;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -53,14 +52,11 @@ public class TabsList extends VBox
 
     public void deleteTab(TabBrowser tabBrowser) {
         if(buttons.size() == 1) {
-            Alert alert = new Alert(Alert.AlertType.NONE, "Vous voulez fermer le dernier onglet.\nVoulez vous fermer le navigateur ?",
-                    new ButtonType("Oui", ButtonBar.ButtonData.YES), new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE));
-            alert.setTitle("Fermeture du dernier onglet");
-            alert.showAndWait();
-            if(alert.getResult() == ButtonType.YES)
-                System.exit(1);
-            else
-                return;
+            QuestionYesCancel closeBrowser = new QuestionYesCancel("Fermeture du dernier onglet",
+                    "Vous voulez fermer le dernier onglet.\nVoulez vous fermer le navigateur ?");
+            if(closeBrowser.isYes())
+                HeartBrowser.stage.close();
+            return;
         }
         if(currentTabBrowser == tabBrowser) {
             int index = buttons.indexOf(tabBrowser.tabBrowserButton);
