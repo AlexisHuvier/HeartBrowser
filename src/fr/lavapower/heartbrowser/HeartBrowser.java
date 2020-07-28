@@ -1,6 +1,7 @@
 package fr.lavapower.heartbrowser;
 
-import fr.lavapower.heartbrowser.utils.HeartUtils;
+import fr.lavapower.heartbrowser.utils.Configuration;
+import fr.lavapower.heartbrowser.utils.Database;
 import fr.lavapower.heartbrowser.widgets.Grid;
 import fr.lavapower.heartbrowser.windows.QuestionYesCancel;
 import javafx.application.Application;
@@ -8,7 +9,6 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
@@ -21,11 +21,17 @@ public class HeartBrowser extends Application
 
     private static Grid grid;
     public static Stage stage;
+    public static Configuration configuration;
 
     @Override
     public void start(Stage stage) throws IOException
     {
         loadLogger();
+
+        Database db = new Database("base.db");
+        db.setUp();
+        configuration = new Configuration(db);
+
         HeartBrowser.stage = stage;
 
         grid = new Grid();
@@ -40,21 +46,28 @@ public class HeartBrowser extends Application
                 if(closeBrowser.isCancel())
                     event.consume();
                 else
-                    System.exit(0);
+                    close();
             }
             else
-                System.exit(0);
+                close();
         });
 
         stage.setMaximized(true);
         stage.setTitle("HeartBrowser");
         stage.setScene(scene);
         stage.show();
+
+        db.close();
     }
 
     @Override
-    public void stop()
-    {
+    public void stop() { close(); }
+
+    public void close() {
+        Database db = new Database("base.db");
+        configuration.saveConfig(db);
+        db.close();
+        logger.log(Level.INFO, "Browser Closed");
         System.exit(0);
     }
 

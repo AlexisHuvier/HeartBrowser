@@ -22,7 +22,7 @@ public class TabsList extends VBox
     public TabsList(Grid grid) {
         super(10);
         this.grid = grid;
-        plusButtons = new TabBasicButton(this, "+", event -> addTab("http://google.fr"));
+        plusButtons = new TabBasicButton(this, "+", event -> addTab(HeartBrowser.configuration.home));
         setupChildren();
         setPadding(new Insets(10));
     }
