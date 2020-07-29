@@ -36,11 +36,11 @@ public class Database
         executeWithoutReturn("CREATE TABLE IF NOT EXISTS configuration(id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, logLevel TEXT, home TEXT,"
                 + "version INTEGER);");
         executeWithoutReturn("CREATE TABLE IF NOT EXISTS history(id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, url TEXT, "
-                + "date DATETIME DEFAULT CURRENT_TIMESTAMP);");
+                + "date TEXT);");
         executeWithoutReturn("CREATE TABLE IF NOT EXISTS favorites(url TEXT PRIMARY KEY UNIQUE);");
         try {
             if(executeWithReturn("SELECT * FROM configuration;").getFetchSize() == 0)
-                executeWithoutReturn("INSERT INTO configuration(logLevel, home, version) VALUES(\"INFO\", \"google.fr\", 1);");
+                executeWithoutReturn("INSERT INTO configuration(logLevel, home, version) VALUES(\"INFO\", \"https://www.google.com\", 1);");
 
             int version = executeWithReturn("SELECT * FROM configuration;").getInt("version");
             if(version != 1)

@@ -20,7 +20,7 @@ public class HeartBrowser extends Application
 {
     public static final Logger logger = Logger.getLogger("HeartBrowser");
 
-    private static Grid grid;
+    public static Grid grid;
     public static Stage stage;
     public static Configuration configuration;
     public static HistoryManager historyManager;
