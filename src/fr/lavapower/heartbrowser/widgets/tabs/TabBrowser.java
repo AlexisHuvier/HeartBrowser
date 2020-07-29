@@ -4,6 +4,7 @@ import fr.lavapower.heartbrowser.HeartBrowser;
 import fr.lavapower.heartbrowser.utils.FaviconManager;
 import fr.lavapower.heartbrowser.utils.HeartUtils;
 import fr.lavapower.heartbrowser.widgets.tabbuttons.TabBrowserButton;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -12,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.text.Font;
 import javafx.scene.web.WebView;
 
 public class TabBrowser extends GridPane
@@ -28,16 +30,24 @@ public class TabBrowser extends GridPane
         url = HeartUtils.formatUrl(url);
 
         tabBrowserButton = button;
-        view = new WebView();
-        urlInput = new TextField();
-        backButton = new Button("<");
-        forwardButton = new Button(">");
 
+        view = new WebView();
         view.getEngine().setUserAgent("HeartBrowser 1.0 - AppleWebKil/555.99 JavaFX 8.0");
         view.getEngine().load(url);
+
+        urlInput = new TextField();
         urlInput.setText(url);
+        urlInput.setFont(Font.font(13));
+        urlInput.setPadding(new Insets(5));
+        urlInput.setPromptText("Entrr une recherche ou une adresse web");
+
+        backButton = new Button("<");
         backButton.setDisable(true);
+        urlInput.setFont(Font.font(13));
+
+        forwardButton = new Button(">");
         forwardButton.setDisable(true);
+        urlInput.setFont(Font.font(13));
 
         setListenersAndEvents();
 
@@ -46,6 +56,7 @@ public class TabBrowser extends GridPane
         add(urlInput, 2, 0);
         add(view, 0, 1, 3, 1);
 
+        setHgap(10);
         setVgrow(view, Priority.ALWAYS);
         setHgrow(view, Priority.ALWAYS);
         setHgrow(urlInput, Priority.ALWAYS);
