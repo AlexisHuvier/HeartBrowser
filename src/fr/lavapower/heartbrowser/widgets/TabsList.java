@@ -29,7 +29,7 @@ public class TabsList extends VBox
     public TabsList(Grid grid) {
         super(10);
         this.grid = grid;
-        plusButtons = new TabBasicButton("+", event -> addTab(HeartBrowser.configuration.home));
+        plusButtons = new TabBasicButton("+", "Nouveau Onglet", event -> addTab(HeartBrowser.configuration.home));
         tabParameterButton = new TabParameterButton(this);
         tabHistoryButton = new TabHistoryButton(this);
         setupChildren();

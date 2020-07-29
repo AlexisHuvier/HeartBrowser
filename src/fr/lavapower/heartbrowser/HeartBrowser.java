@@ -3,6 +3,7 @@ package fr.lavapower.heartbrowser;
 import fr.lavapower.heartbrowser.history.HistoryManager;
 import fr.lavapower.heartbrowser.utils.Configuration;
 import fr.lavapower.heartbrowser.utils.Database;
+import fr.lavapower.heartbrowser.utils.HeartUtils;
 import fr.lavapower.heartbrowser.widgets.Grid;
 import fr.lavapower.heartbrowser.windows.QuestionYesCancel;
 import javafx.application.Application;
@@ -31,6 +32,8 @@ public class HeartBrowser extends Application
         HeartBrowser.stage = stage;
 
         loadLogger();
+
+        HeartUtils.setTooltipTimers(100, 5000, 50);
 
         Database db = new Database("base.db");
         db.setUp();
