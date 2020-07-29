@@ -26,12 +26,14 @@ public class HeartBrowser extends Application
     @Override
     public void start(Stage stage) throws IOException
     {
+        HeartBrowser.stage = stage;
+
         loadLogger();
 
         Database db = new Database("base.db");
         db.setUp();
         configuration = new Configuration(db);
-
+        logger.setLevel(configuration.logLevel);
         HeartBrowser.stage = stage;
 
         grid = new Grid();
@@ -63,7 +65,7 @@ public class HeartBrowser extends Application
     @Override
     public void stop() { close(); }
 
-    public void close() {
+    public static void close() {
         Database db = new Database("base.db");
         configuration.saveConfig(db);
         db.close();

@@ -1,7 +1,6 @@
 package fr.lavapower.heartbrowser.widgets;
 
 import fr.lavapower.heartbrowser.HeartBrowser;
-import fr.lavapower.heartbrowser.widgets.tabs.TabsList;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;

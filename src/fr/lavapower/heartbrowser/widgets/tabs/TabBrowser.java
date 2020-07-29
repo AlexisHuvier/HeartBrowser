@@ -1,7 +1,9 @@
 package fr.lavapower.heartbrowser.widgets.tabs;
 
+import fr.lavapower.heartbrowser.HeartBrowser;
 import fr.lavapower.heartbrowser.utils.FaviconManager;
 import fr.lavapower.heartbrowser.utils.HeartUtils;
+import fr.lavapower.heartbrowser.widgets.tabbuttons.TabBrowserButton;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -23,12 +25,21 @@ public class TabBrowser extends GridPane
 
     public TabBrowser(TabBrowserButton button, String url) {
         super();
+        url = HeartUtils.formatUrl(url);
+
         tabBrowserButton = button;
         view = new WebView();
         urlInput = new TextField();
         backButton = new Button("<");
         forwardButton = new Button(">");
-        setUp(url);
+
+        view.getEngine().setUserAgent("HeartBrowser 1.0 - AppleWebKil/555.99 JavaFX 8.0");
+        view.getEngine().load(url);
+        urlInput.setText(url);
+        backButton.setDisable(true);
+        forwardButton.setDisable(true);
+
+        setListenersAndEvents();
 
         add(backButton, 0, 0);
         add(forwardButton, 1, 0);
@@ -40,8 +51,7 @@ public class TabBrowser extends GridPane
         setHgrow(urlInput, Priority.ALWAYS);
     }
 
-    private void setUp(String url) {
-
+    private void setListenersAndEvents() {
         view.getEngine().titleProperty().addListener(((observable, oldValue, newValue) -> {
             if(newValue != null && !newValue.isEmpty())
                 tabBrowserButton.setTooltip(new Tooltip(newValue));
@@ -97,11 +107,5 @@ public class TabBrowser extends GridPane
             if(view.getEngine().getHistory().getCurrentIndex() == view.getEngine().getHistory().getEntries().size() - 1)
                 forwardButton.setDisable(true);
         });
-
-        view.getEngine().setUserAgent("HeartBrowser 1.0 - AppleWebKil/555.99 JavaFX 8.0");
-        view.getEngine().load(HeartUtils.formatUrl(url));
-        urlInput.setText(url);
-        backButton.setDisable(true);
-        forwardButton.setDisable(true);
     }
 }
