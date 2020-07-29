@@ -11,6 +11,9 @@ public class TabHistoryButton extends TabButton
         super();
         setText("H");
         tabHistory = new TabHistory();
-        setOnAction(event -> tabsList.selectTab(tabHistory));
+        setOnAction(event -> {
+            tabsList.selectTab(tabHistory);
+            tabHistory.update();
+        });
     }
 }
