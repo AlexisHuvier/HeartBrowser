@@ -1,5 +1,6 @@
 package fr.lavapower.heartbrowser;
 
+import fr.lavapower.heartbrowser.history.HistoryManager;
 import fr.lavapower.heartbrowser.utils.Configuration;
 import fr.lavapower.heartbrowser.utils.Database;
 import fr.lavapower.heartbrowser.widgets.Grid;
@@ -22,6 +23,7 @@ public class HeartBrowser extends Application
     private static Grid grid;
     public static Stage stage;
     public static Configuration configuration;
+    public static HistoryManager historyManager;
 
     @Override
     public void start(Stage stage) throws IOException
@@ -34,7 +36,7 @@ public class HeartBrowser extends Application
         db.setUp();
         configuration = new Configuration(db);
         logger.setLevel(configuration.logLevel);
-        HeartBrowser.stage = stage;
+        historyManager = new HistoryManager(db);
 
         grid = new Grid();
         Scene scene = new Scene(grid, 780, 640);
@@ -68,6 +70,7 @@ public class HeartBrowser extends Application
     public static void close() {
         Database db = new Database("base.db");
         configuration.saveConfig(db);
+        historyManager.saveHistory(db);
         db.close();
         logger.log(Level.INFO, "Browser Closed");
         System.exit(0);
