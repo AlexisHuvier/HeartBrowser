@@ -10,7 +10,17 @@ public class FaviconManager
 {
     private static final HashMap<String, Image> icons = new HashMap<>();
 
+    public static String formatUrlToFavicon(String url) {
+        String[] urlParts = url.split("/");
+        if(urlParts.length > 3)
+            return urlParts[0] + "/" + urlParts[1] + "/" + urlParts[2];
+        else
+            return url;
+    }
+
     public static Image getFavicon(String location) {
+        location = formatUrlToFavicon(location);
+
         if(icons.containsKey(location))
             return icons.get(location);
         else {

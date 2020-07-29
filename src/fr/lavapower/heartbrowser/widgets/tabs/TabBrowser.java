@@ -63,12 +63,8 @@ public class TabBrowser extends GridPane
 
             if(newValue != null && !newValue.isEmpty()) {
                 urlInput.setText(newValue);
-                String[] urlParts = newValue.split("/");
-                String urlToFavicon;
-                if(urlParts.length > 3)
-                    urlToFavicon = urlParts[0] + "/" + urlParts[1] + "/" + urlParts[2];
-                else
-                    urlToFavicon = newValue;
+                HeartBrowser.historyManager.addHistory(newValue);
+                String urlToFavicon = FaviconManager.formatUrlToFavicon(newValue);
                 if(locationMain == null || !locationMain.equals(urlToFavicon))
                 {
                     Image icon = FaviconManager.getFavicon(urlToFavicon);
