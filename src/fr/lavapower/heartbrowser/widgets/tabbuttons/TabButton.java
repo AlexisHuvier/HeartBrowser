@@ -1,6 +1,5 @@
 package fr.lavapower.heartbrowser.widgets.tabbuttons;
 
-import fr.lavapower.heartbrowser.widgets.TabsList;
 import javafx.scene.control.Button;
 import javafx.scene.shape.Circle;
 
