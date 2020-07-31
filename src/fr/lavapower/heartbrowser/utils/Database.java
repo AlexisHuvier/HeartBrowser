@@ -12,10 +12,10 @@ Structure BDD :
   -> home (string)
   -> version (integer)
 -> History :
-  -> path (string)
-  -> date (date)
+  -> url (string)
+  -> date (string)
 -> Favorites :
-  -> path (string)
+  -> url (string)
 */
 public class Database
 {

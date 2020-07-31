@@ -1,20 +1,26 @@
 package fr.lavapower.heartbrowser.widgets.tabs;
 
+import com.sun.javafx.scene.control.skin.ContextMenuContent;
 import fr.lavapower.heartbrowser.HeartBrowser;
 import fr.lavapower.heartbrowser.utils.FaviconManager;
 import fr.lavapower.heartbrowser.utils.HeartUtils;
 import fr.lavapower.heartbrowser.widgets.tabbuttons.TabBrowserButton;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebView;
+import javafx.stage.PopupWindow;
+import javafx.stage.Window;
+
+import java.util.Iterator;
 
 public class TabBrowser extends GridPane
 {
@@ -90,6 +96,8 @@ public class TabBrowser extends GridPane
             }
         }));
 
+        view.setOnContextMenuRequested(event -> getPopupContextMenu());
+
         urlInput.setOnKeyReleased(event -> {
             if (event.getCode() == KeyCode.ENTER)
                 view.getEngine().load(HeartUtils.formatUrl(urlInput.getText()));
@@ -114,5 +122,47 @@ public class TabBrowser extends GridPane
             if(view.getEngine().getHistory().getCurrentIndex() == view.getEngine().getHistory().getEntries().size() - 1)
                 forwardButton.setDisable(true);
         });
+    }
+
+    private PopupWindow getPopupContextMenu() {
+
+        @SuppressWarnings("deprecation")
+        final Iterator<Window> windows = Window.impl_getWindows();
+
+        while (windows.hasNext()) {
+            final Window window = windows.next();
+
+            if (window instanceof ContextMenu) {
+                if(window.getScene()!=null && window.getScene().getRoot()!=null){
+                    Parent root = window.getScene().getRoot();
+
+                    // access to context menu content
+                    if(root.getChildrenUnmodifiable().size()>0){
+                        Node popup = root.getChildrenUnmodifiable().get(0);
+                        if(popup.lookup(".context-menu")!=null){
+                            Node bridge = popup.lookup(".context-menu");
+                            ContextMenuContent cmc= (ContextMenuContent)((Parent)bridge).getChildrenUnmodifiable().get(0);
+
+                            VBox itemsContainer = cmc.getItemsContainer();
+                            for(Node n: itemsContainer.getChildren()){
+                                ContextMenuContent.MenuItemContainer item=(ContextMenuContent.MenuItemContainer)n;
+                                System.out.println(item.getItem().getText());
+                            }
+                            // remove some item:
+                            // itemsContainer.getChildren().remove(0);
+
+                            // adding new item:
+                            // MenuItem menuItem = new MenuItem("Save page");
+                            // menuItem.setOnAction(event -> System.out.println("Save Page"));
+                            // cmc.getItemsContainer().getChildren().add(cmc.new MenuItemContainer(menuItem));
+
+                            return (PopupWindow)window;
+                        }
+                    }
+                }
+                return null;
+            }
+        }
+        return null;
     }
 }
