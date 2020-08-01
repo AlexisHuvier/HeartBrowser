@@ -168,19 +168,17 @@ public class TabBrowser extends GridPane
                             for(Node n : itemsContainer.getChildren())
                             {
                                 ContextMenuContent.MenuItemContainer item = (ContextMenuContent.MenuItemContainer)n;
-                                if(item.getItem().getText().equals("Ouvrir le lien dans une nouvelle fenêtre"))
+                                if(item.getItem().getText().equals("Ouvrir le lien dans une nouvelle fenêtre")) {
+                                    MenuItem openOnglet = new MenuItem("Ouvrir le lien dans un nouvel onglet");
+                                    System.out.println(item.getItem().getOnAction());
+                                    menuItemContainers.add(cmc.new MenuItemContainer(openOnglet));
+                                }
+                                else
                                     menuItemContainers.add(item);
                             }
 
-                            for(ContextMenuContent.MenuItemContainer menuItemContainer: menuItemContainers) {
-                                cmc.getItemsContainer().getChildren().remove(menuItemContainer);
-                            }
-
-                            MenuItem reload = new MenuItem("Recharger la page");
-                            reload.setOnAction(event -> view.getEngine().reload());
-
-                            cmc.getItemsContainer().getChildren().addAll(new Separator(), cmc.new MenuItemContainer(reload));
-
+                            itemsContainer.getChildren().clear();
+                            itemsContainer.getChildren().setAll(menuItemContainers);
                         }
                     }
                 }
