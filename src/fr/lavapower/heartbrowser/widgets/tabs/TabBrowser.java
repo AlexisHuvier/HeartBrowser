@@ -17,9 +17,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebView;
-import javafx.stage.PopupWindow;
 import javafx.stage.Window;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class TabBrowser extends GridPane
@@ -27,11 +27,13 @@ public class TabBrowser extends GridPane
     private final TextField urlInput;
     private final Button backButton;
     private final Button forwardButton;
+    private ContextMenu contextMenu;
     public final WebView view;
     public final TabBrowserButton tabBrowserButton;
     private String locationMain = null;
 
-    public TabBrowser(TabBrowserButton button, String url) {
+    public TabBrowser(TabBrowserButton button, String url)
+    {
         super();
         url = HeartUtils.formatUrl(url);
 
@@ -40,6 +42,7 @@ public class TabBrowser extends GridPane
         view = new WebView();
         view.getEngine().setUserAgent("HeartBrowser 1.0 - AppleWebKil/555.99 JavaFX 8.0");
         view.getEngine().load(url);
+        createContextMenu();
 
         urlInput = new TextField();
         urlInput.setText(url);
@@ -68,7 +71,8 @@ public class TabBrowser extends GridPane
         setHgrow(urlInput, Priority.ALWAYS);
     }
 
-    private void setListenersAndEvents() {
+    private void setListenersAndEvents()
+    {
         view.getEngine().titleProperty().addListener(((observable, oldValue, newValue) -> {
             if(newValue != null && !newValue.isEmpty())
                 tabBrowserButton.setTooltip(new Tooltip(newValue));
@@ -78,14 +82,16 @@ public class TabBrowser extends GridPane
             if(oldValue != null)
                 backButton.setDisable(false);
 
-            if(newValue != null && !newValue.isEmpty()) {
+            if(newValue != null && !newValue.isEmpty())
+            {
                 urlInput.setText(newValue);
                 HeartBrowser.historyManager.addHistory(newValue);
                 String urlToFavicon = FaviconManager.formatUrlToFavicon(newValue);
                 if(locationMain == null || !locationMain.equals(urlToFavicon))
                 {
                     Image icon = FaviconManager.getFavicon(urlToFavicon);
-                    if(icon != null) {
+                    if(icon != null)
+                    {
                         ImageView imageView = new ImageView(icon);
                         imageView.setScaleX(1.6);
                         imageView.setScaleY(1.6);
@@ -96,15 +102,16 @@ public class TabBrowser extends GridPane
             }
         }));
 
-        view.setOnContextMenuRequested(event -> getPopupContextMenu());
+        view.setOnContextMenuRequested(event -> getContextMenu());
 
         urlInput.setOnKeyReleased(event -> {
-            if (event.getCode() == KeyCode.ENTER)
+            if(event.getCode() == KeyCode.ENTER)
                 view.getEngine().load(HeartUtils.formatUrl(urlInput.getText()));
         });
 
         backButton.setOnAction(event -> {
-            if( view.getEngine().getHistory().getCurrentIndex() > 0) {
+            if(view.getEngine().getHistory().getCurrentIndex() > 0)
+            {
                 view.getEngine().getHistory().go(-1);
                 forwardButton.setDisable(false);
             }
@@ -114,7 +121,8 @@ public class TabBrowser extends GridPane
         });
 
         forwardButton.setOnAction(event -> {
-            if(view.getEngine().getHistory().getCurrentIndex() < view.getEngine().getHistory().getEntries().size() - 1) {
+            if(view.getEngine().getHistory().getCurrentIndex() < view.getEngine().getHistory().getEntries().size() - 1)
+            {
                 view.getEngine().getHistory().go(1);
                 backButton.setDisable(false);
             }
@@ -124,45 +132,59 @@ public class TabBrowser extends GridPane
         });
     }
 
-    private PopupWindow getPopupContextMenu() {
+    private void createContextMenu()
+    {
+        contextMenu = new ContextMenu();
+        MenuItem reload = new MenuItem("Recharger");
+        reload.setOnAction(event -> view.getEngine().reload());
+    }
 
+    private void getContextMenu()
+    {
         @SuppressWarnings("deprecation")
         final Iterator<Window> windows = Window.impl_getWindows();
 
-        while (windows.hasNext()) {
+        while(windows.hasNext())
+        {
             final Window window = windows.next();
 
-            if (window instanceof ContextMenu) {
-                if(window.getScene()!=null && window.getScene().getRoot()!=null){
+            if(window instanceof ContextMenu)
+            {
+                if(window.getScene() != null && window.getScene().getRoot() != null)
+                {
                     Parent root = window.getScene().getRoot();
 
                     // access to context menu content
-                    if(root.getChildrenUnmodifiable().size()>0){
+                    if(root.getChildrenUnmodifiable().size() > 0)
+                    {
                         Node popup = root.getChildrenUnmodifiable().get(0);
-                        if(popup.lookup(".context-menu")!=null){
+                        if(popup.lookup(".context-menu") != null)
+                        {
                             Node bridge = popup.lookup(".context-menu");
-                            ContextMenuContent cmc= (ContextMenuContent)((Parent)bridge).getChildrenUnmodifiable().get(0);
+                            ContextMenuContent cmc = (ContextMenuContent)((Parent)bridge).getChildrenUnmodifiable().get(0);
+                            ArrayList<ContextMenuContent.MenuItemContainer> menuItemContainers = new ArrayList<>();
 
                             VBox itemsContainer = cmc.getItemsContainer();
-                            for(Node n: itemsContainer.getChildren()){
-                                ContextMenuContent.MenuItemContainer item=(ContextMenuContent.MenuItemContainer)n;
-                                System.out.println(item.getItem().getText());
+                            for(Node n : itemsContainer.getChildren())
+                            {
+                                ContextMenuContent.MenuItemContainer item = (ContextMenuContent.MenuItemContainer)n;
+                                if(item.getItem().getText().equals("Ouvrir le lien dans une nouvelle fenêtre"))
+                                    menuItemContainers.add(item);
                             }
-                            // remove some item:
-                            // itemsContainer.getChildren().remove(0);
 
-                            // adding new item:
-                            // MenuItem menuItem = new MenuItem("Save page");
-                            // menuItem.setOnAction(event -> System.out.println("Save Page"));
-                            // cmc.getItemsContainer().getChildren().add(cmc.new MenuItemContainer(menuItem));
+                            for(ContextMenuContent.MenuItemContainer menuItemContainer: menuItemContainers) {
+                                cmc.getItemsContainer().getChildren().remove(menuItemContainer);
+                            }
 
-                            return (PopupWindow)window;
+                            MenuItem reload = new MenuItem("Recharger la page");
+                            reload.setOnAction(event -> view.getEngine().reload());
+
+                            cmc.getItemsContainer().getChildren().addAll(new Separator(), cmc.new MenuItemContainer(reload));
+
                         }
                     }
                 }
-                return null;
             }
         }
-        return null;
     }
 }
