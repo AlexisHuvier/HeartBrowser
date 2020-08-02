@@ -32,8 +32,23 @@ public class TabsList extends VBox
         plusButtons = new TabBasicButton("+", "Nouveau Onglet", event -> addTab(HeartBrowser.configuration.home));
         tabParameterButton = new TabParameterButton(this);
         tabHistoryButton = new TabHistoryButton(this);
+        setupGrid();
         setupChildren();
         setPadding(new Insets(10));
+    }
+
+    private void setupGrid() {
+        setOnMouseDragReleased(event -> {
+            int index = getChildren().indexOf(event.getGestureSource());
+            rotateNodes(index, buttons.size()-1);
+        });
+    }
+
+    public void rotateNodes(final int index, final int indexOfDropTarget) {
+        if (index >= 0 && indexOfDropTarget >= 0) {
+            final Node node = getChildren().remove(index);
+            getChildren().add(indexOfDropTarget, node);
+        }
     }
 
     private void setupChildren() {

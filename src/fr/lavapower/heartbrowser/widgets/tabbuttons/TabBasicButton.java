@@ -1,6 +1,5 @@
 package fr.lavapower.heartbrowser.widgets.tabbuttons;
 
-import fr.lavapower.heartbrowser.widgets.TabsList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Tooltip;
